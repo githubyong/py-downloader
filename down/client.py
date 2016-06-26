@@ -8,12 +8,13 @@ from Tracker import Tracker
 
 
 def Usage():
-    print 'PyTest.py usage:'
+    print 'downloader usage:'
     print '-h,--help: print help message.'
     print '-v, --version: print script version'
-    print '-o, --output: input an output verb'
-    print '--foo: Test option '
-    print '--fre: another test option'
+    print '-u=,--url=example.com: url to be download .'
+    print '-c=,--connection=n: connections (threads) will be opend to get the file .[default :1]'
+    print '-d=,--dir=d:/file/xxx: the dir that download file will be saved in . [default:current dir]'
+    print '-f=,-fName=xx: file name to be saved .[default:str after last ' / ']'
 
 
 def Version():
@@ -26,7 +27,12 @@ def OutPut(args):
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hvo:', ['output=', 'foo=', 'fre='])
+        opts, args = getopt.getopt(sys.argv[1:], 'hvu:c:d:f:',
+                                   ['help', 'version', 'url=', 'connection=', 'dir=', 'fName='])
+        url = None
+        num = 1
+        path = None
+        fName = None
     except getopt.GetoptError, err:
         print str(err)
         Usage()
@@ -38,16 +44,21 @@ def main():
         elif o in ('-v', '--version'):
             Version()
             sys.exit(0)
-        elif o in ('-o', '--output'):
-            OutPut(a)
-            sys.exit(0)
-        elif o in ('--foo',):
-            Foo = a
-        elif o in ('--fre',):
-            Fre = a
+        elif o in ('-u', '--url'):
+            url = a
+
+        elif o in ('-c', '--connection'):
+            num = int(a)
+        elif o in ('-d', '--dir'):
+            path = a
+        elif o in ('-f', '--fName'):
+            fName = a
         else:
             print 'unhandled option'
             sys.exit(3)
+
+    tracker = Tracker(url=url, path=path, fName=fName, num=num)
+    tracker.start()
 
 
 if __name__ == '__main__':

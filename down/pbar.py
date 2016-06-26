@@ -14,7 +14,7 @@ class Bar:
     PREFIXES = ' kMGTPEZY'
 
     def __init__(self, title, total, width=20, eta='ETA', currval=0, speed=0, fd=sys.stderr,
-                 pchar=[u"▏", u"▎", u"▍", u"▌", u"▋", u"▊", u"▉", u"█"], fillchar=' ', s_used=0):
+                 pchar=['', u"▏", u"▎", u"▍", u"▌", u"▋", u"▊", u"▉", u"█"], fillchar=' ', s_used=0):
         self.total = total
         self.title = title
         self.width = width
@@ -55,11 +55,11 @@ class Bar:
         return self.FORMAT % (scaled, self.PREFIXES[power], self.unit)
 
     def update(self, chunk):
-        if self.currval < self.total:
-            self.currval += chunk
-            self.s_used += 1
-            self.speed = chunk
-        else:
+
+        self.currval += chunk
+        self.s_used += 1
+        self.speed = chunk
+        if self.currval >= self.total:
             self.finished = True
         self.fd.write('%s %s %s %s \r' % (self.title_p(), self.bar_p(), self.eta_p(), self.speed_p()))
 
