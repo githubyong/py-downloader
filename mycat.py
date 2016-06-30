@@ -5,16 +5,18 @@ __author__ = 'yong'
 import sys
 import getopt
 from Tracker import Tracker
-
+import logging
 
 def Usage():
     print u'''usage:
         -h,--help: 帮助.
         -v, --version: 版本信息.
+        -x,--debug:开启debug模式.
         -u=,--url=下载文件的url.
         -c=,--connection=n:开启n个连接(线程)去下载文件.(默认:1，站点出口速度不好的话开多个可以加快下载速度).
         -d=,--dir=d:/file/xxx:保存文件的路径 (默认为当前文件夹).
         -f=,-fName=xx: 要保存的文件名(默认截取url的最后一个 '/'之后的字符串).
+
         eg:cat -u http://dlsw.baidu.com/sw-search-sp/soft/3d/20621/XMusicSetup_2_0_2_1618.1394071033.exe -c 3.'''
 
 
@@ -29,8 +31,8 @@ def OutPut(args):
 
 def main():
     try:
-        shotopts = 'hvu:c:d:f:'
-        longopts = ['help', 'version', 'url=', 'connection=', 'dir=', 'fName=']
+        shotopts = 'hvu:c:d:f:x'
+        longopts = ['help', 'version', 'url=', 'connection=', 'dir=', 'fName=','debug']
         opts, args = getopt.getopt(sys.argv[1:], shotopts, longopts)
         if not sys.argv[1:]:
             Usage()
@@ -58,11 +60,16 @@ def main():
             path = a
         elif o in ('-f', '--fName'):
             fName = a
+        elif o in ('-x', '--debug'):
+            logging.getLogger().setLevel(logging.DEBUG)
         else:
             print 'unhandled option !'
             Usage()
             sys.exit(3)
-
+    logging.debug("prepare to create tracker.")
+    if not url:
+        print "url is required !"
+        sys.exit()
     tracker = Tracker(url=url, path=path, fName=fName, num=num)
     tracker.start()
 

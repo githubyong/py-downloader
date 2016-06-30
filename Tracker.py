@@ -5,14 +5,21 @@ __author__ = 'yong'
 import time, threading, thread
 import requests
 import logging
-import os
+import os, sys
 from pbar import Bar
 
 # logging.basicConfig(level=logging.DEBUG)
 # logging.basicConfig(level=logging.INFO)
 
 THREAD_LOC = threading.local()
-logging.info("----")
+
+# sets the path to the certificate file
+if getattr(sys, 'frozen', False):
+    # if frozen, get embeded file
+    cacert = os.path.join(os.path.dirname(sys.executable), 'cacert.pem')
+else:
+    # else just get the default file
+    cacert = requests.certs.where()
 
 
 def gainres(url, headers=None, num=3):
@@ -21,7 +28,9 @@ def gainres(url, headers=None, num=3):
     """
     try:
         if not hasattr(THREAD_LOC, 'retry'): THREAD_LOC.retry = 1
-        res = requests.get(url=url, headers=headers, stream=True)
+        logging.debug('headers= %s' %headers)
+        res = requests.get(url=url, headers=headers, stream=True, verify=cacert)
+        logging.debug("res = %s" % res)
         if res.status_code in (200, 206):
             logging.debug(" %s connected ." % url)
             return res
@@ -34,7 +43,7 @@ def gainres(url, headers=None, num=3):
             else:
                 return res
     except Exception  as e:
-        print e.message
+        print 'Connect Error:', e.message
         return None
 
 
@@ -52,13 +61,15 @@ def createFile(path, fName):
     if path and not os.path.isdir(path):
         os.makedirs(os.path.normpath(path))
     fullfName = path + os.sep + fName if path else fName
+    logging.debug("to create file : %s" % fullfName)
     if not os.path.isfile(fullfName):
         open(fullfName, 'wb').close()
-        logging.info(" create file %s " % fullfName)
+        logging.debug(" create file %s " % fullfName)
 
 
 class Tracker(threading.Thread):
     def __init__(self, url, headers=None, path=None, fName=None, num=1):
+        logging.debug('init tracker start...')
         threading.Thread.__init__(self)
         self.url = url
         self.headers = headers
@@ -68,6 +79,7 @@ class Tracker(threading.Thread):
         self.thread_pool = []
         self.total = 1
         self.current = 0
+        logging.debug('init tracker end...')
 
     def run(self):
         print "Tracker start ,waiting for connect ..."
@@ -79,11 +91,12 @@ class Tracker(threading.Thread):
             createFile(self.path, self.fName)
             L_ranges = split(self.total, self.num)
             self.thread_pool = map(lambda x: Worker(url=self.url, path=self.path, fName=self.fName, on_off=x), L_ranges)
+            logging.debug('to start workers(thread pool) : %s' % self.thread_pool)
             map(lambda t: t.start(), self.thread_pool)
             self.moniror()
             # map(lambda t: t.join(), self.thread_pool)
         else:
-            print ' unsupport url %s  :%s ' % (self.url, res)
+            print ' unsupport url %s  : response=%s ' % (self.url, res)
 
     def moniror(self):
         while self.current < self.total:
@@ -115,7 +128,7 @@ class Worker(threading.Thread):
 
     def run(self):
         logging.info("Worker Starting  %s = %s" % (self, self.headers))
-        res = gainres(url=self.url, headers=self.headers, num=5)
+        res = gainres(url=self.url, headers=self.headers, num=50)
         if res and res.status_code in (200, 206):
             fullName = self.path + os.sep + self.fName if self.path else self.fName
             try:

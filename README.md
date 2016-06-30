@@ -3,14 +3,15 @@
 ![Lisense: GPL v3][1]
 [1]: http://img.shields.io/badge/license-GPL_v3-red.svg?style=flat-square
 
-下载小工具，可下载固定长度的文件(即headers包含Content-Length属性的连接)，暂不支持‘Transfer-Encoding: chunked’类型连接.
-在某些时候，比如p2p下载背禁止或限速，而直接通过浏览器下载的速度又比较慢时，可以尝试下这个 O(∩_∩)O
+说明;下载小工具，可下载固定长度的文件(即headers包含Content-Length属性的连接)，暂不支持‘Transfer-Encoding: chunked’类型连接.
+用途:在某些时候，比如p2p下载被禁止或限速，而直接通过浏览器下载的速度又比较慢时，可以尝试下这个 O(∩_∩)O
 
 **How to use it?**
 
-      -h,--help: 帮助.<br>
-      -v, --version: 版本信息.<br>
-      -u=,--url=下载文件的url.<br>
+      -h,--help: 帮助.
+      -v,--version: 版本信息.
+      -x,--debug:开启debug模式
+      -u=,--url=下载文件的url.
       -c=,--connection=n:开启n个连接(线程)去下载文件.(默认:1，站点出口速度不好的话开多个可以加快下载速度).
       -d=,--dir=d:/file/xxx:保存文件的路径 (默认为当前文件夹).
       -f=,-fName=xx: 要保存的文件名(默认截取url的最后一个 '/'之后的字符串).
@@ -20,7 +21,8 @@
 usage(Eng):
 
       -h,--help: help info.'
-      -v, --version: version info'
+      -v,--version: version info'
+      -x,--debug:run as debug mode.
       -u=,--url=url to be work'
       -c=,--connection=n: num of connections (threads) to be opend to get the file .(default :1)'
       -d=,--dir=d:/file/xxx: the dir that download file will be saved in . (default:current dir)'

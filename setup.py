@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = 'yong'
-
+import requests
 from cx_Freeze import setup,Executable
 
-includefiles = [ 'README.md','down.ico']
+includefiles = [ 'README.md','down.ico',(requests.certs.where(), 'cacert.pem')]
 includes = ['requests']
 excludes = ['Tkinter']
 packages = ['sys',]
@@ -15,6 +15,7 @@ setup(
     description = 'A downloader.',
     author = 'yong',
     author_email = '12374011@163.com',
+    requires = ["requests"],
     options = {'build_exe': {'excludes':excludes,'packages':packages,'include_files':includefiles}},
-    executables = [Executable('cat.py',icon = "down.ico")]
+    executables = [Executable('mycat.py',icon = "down.ico")]
 )

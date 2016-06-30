@@ -51,6 +51,7 @@ class Bar:
 
     def speed_p(self):
         power = int(math.log(self.speed, 1000)) if self.speed else 0
+        power = int(math.log(self.total / 1.0 / self.s_used, 1000)) if self.finished else power
         scaled = self.speed / 1000. ** power
         return self.FORMAT % (scaled, self.PREFIXES[power], self.unit)
 
@@ -61,7 +62,7 @@ class Bar:
         self.speed = chunk
         if self.currval >= self.total:
             self.finished = True
-        self.fd.write('%s %s %s %s \r' % (self.title_p(), self.bar_p(), self.eta_p(), self.speed_p()))
+        self.fd.write('%s |%s| %s %s \r' % (self.title_p(), self.bar_p(), self.eta_p(), self.speed_p()))
 
 
 def testbar():
