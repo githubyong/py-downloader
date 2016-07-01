@@ -4,7 +4,7 @@ __author__ = 'yong'
 import requests
 from cx_Freeze import setup,Executable
 
-includefiles = [ 'README.md','down.ico',(requests.certs.where(), 'cacert.pem')]
+includefiles = [ 'README.md','down.ico',(requests.certs.where(), 'cacert.pem'),'LICENSE.txt']
 includes = ['requests']
 excludes = ['Tkinter']
 packages = ['sys',]

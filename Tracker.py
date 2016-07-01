@@ -93,12 +93,12 @@ class Tracker(threading.Thread):
             self.thread_pool = map(lambda x: Worker(url=self.url, path=self.path, fName=self.fName, on_off=x), L_ranges)
             logging.debug('to start workers(thread pool) : %s' % self.thread_pool)
             map(lambda t: t.start(), self.thread_pool)
-            self.moniror()
+            self.monitor()
             # map(lambda t: t.join(), self.thread_pool)
         else:
             print ' unsupport url %s  : response=%s ' % (self.url, res)
 
-    def moniror(self):
+    def monitor(self):
         while self.current < self.total:
             speed, current = 0, 0
             for t in self.thread_pool:

@@ -50,8 +50,9 @@ class Bar:
             return 'ETA:  %s' % str(datetime.timedelta(seconds=int(elapsed)))
 
     def speed_p(self):
+        if self.finished:
+            self.speed = self.total / 1.0 / self.s_used
         power = int(math.log(self.speed, 1000)) if self.speed else 0
-        power = int(math.log(self.total / 1.0 / self.s_used, 1000)) if self.finished else power
         scaled = self.speed / 1000. ** power
         return self.FORMAT % (scaled, self.PREFIXES[power], self.unit)
 
