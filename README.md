@@ -6,6 +6,12 @@
 * 说明:下载小工具，主要使用requests+threading写成，可下载固定长度的文件(即headers包含Content-Length属性的连接)，暂不支持‘Transfer-Encoding: chunked’类型连接
 * 用途:在某些时候，比如p2p下载被禁止或限速，而直接通过浏览器下载的速度又比较慢时，可以尝试下这个 O(∩_∩)O
 
+如下是我在下载一个virtualbox时分别使用迅雷龟速和使用本程序下载的时候一个还可以接受的速度对比:<br>
+![2]<br>
+![3]
+[2]:https://github.com/githubyong/py-downloader/blob/master/img/thunder.png
+[3]:https://github.com/githubyong/py-downloader/blob/master/img/mycat.png
+
 ###如何使用?
 
       -h,--help: 帮助.
